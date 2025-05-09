@@ -24,7 +24,7 @@ import org.koin.androidx.compose.getViewModel
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object QR : Screen("My QR")
-    object History : Screen("Event history")
+    object History : Screen("Events overview")
 
     object EventDetail : Screen("eventDetail/{itemId}") {
         fun createRoute(itemId: String) = "eventDetail/$itemId"

@@ -1,6 +1,7 @@
 package com.st11.epartyentry.screens
 
 import android.app.Activity
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -35,7 +37,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.st11.epartyentry.R
 import com.st11.epartyentry.utils.DynamicStatusBar
+import com.st11.epartyentry.viewmodel.EventsViewModel
 import org.koin.androidx.compose.koinViewModel
+
 
 
 
@@ -47,13 +51,22 @@ fun HistoryScreen(navController: NavController) {
 
     DynamicStatusBar(backgroundColor)  // ✅ Apply dynamic status bar settings
 
+    val eventViewModel: EventsViewModel = koinViewModel()
+//    val totalPeople by peopleViewModel.totalPeople.collectAsState()
+     val totalEnded by eventViewModel.totalEnded.collectAsState()
+    val totalUpcoming by eventViewModel.totalUpcoming.collectAsState()
 
+
+    LaunchedEffect(Unit)  {
+       eventViewModel.getAllTotalEnded()
+        eventViewModel.getAllTotalUpcoming()
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Home", color = Color.White)
+                    Text("Events", color = Color.White)
                 },
                 navigationIcon = { /* Optional: Add IconButton here if needed */ },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -66,28 +79,51 @@ fun HistoryScreen(navController: NavController) {
 
     ) { paddingValues ->
 
+
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .verticalScroll(rememberScrollState()) // ✅ Enable scrolling
+                .verticalScroll(rememberScrollState())
+                .background(colorResource(id = R.color.light_bg_color))
         ) {
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement =  Arrangement.spacedBy(12.dp)
             ) {
-                Text(
-                    text = "No Data Available",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Gray
+                EventCard(
+                    title = "Upcoming Events",
+                    count = totalUpcoming ?: 0,
+                    imageRes = R.drawable.party01
+                )
+                EventCard(
+                    title = "Ended Events",
+                    count = totalEnded ?: 0,
+                    imageRes = R.drawable.party02
                 )
             }
 
+            Spacer(modifier = Modifier.height(24.dp))
+
+//            Box(
+//                modifier = Modifier.fillMaxSize(),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Text(
+//                    text = "No Data Available",
+//                    fontSize = 18.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.Gray
+//                )
+//            }
         }
+
     }
 
 }
@@ -96,4 +132,48 @@ fun HistoryScreen(navController: NavController) {
 @Composable
 fun HistoryScreenPreview() {
     HistoryScreen(navController = rememberNavController())
+}
+
+@Composable
+fun EventCard(title: String, count: Int, imageRes: Int) {
+    Box(
+        modifier = Modifier
+            .height(120.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.LightGray)
+            .fillMaxSize()
+    ) {
+        Image(
+            painter = painterResource(id = imageRes),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.matchParentSize()
+        )
+
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(12.dp),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Text(
+                text = "$title:",
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp
+            )
+            Text(
+                text = count.toString(),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            )
+        }
+    }
 }
