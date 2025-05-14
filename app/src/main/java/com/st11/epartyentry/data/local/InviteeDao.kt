@@ -39,7 +39,8 @@ interface InviteeDao {
     @Query("SELECT * FROM invitee WHERE phone = :phone AND eventId = :eventId AND isCheckIn = 1 LIMIT 1")
     suspend fun getInviteeByPhoneAndEvent(phone: String, eventId: String): InviteeEntity?
 
-
+    @Query("SELECT * FROM invitee WHERE phone = :phone AND eventId = :eventId LIMIT 1")
+    suspend fun getInviteeByPhoneAndEventIfInvited(phone: String, eventId: String): InviteeEntity?
 
 //    @Query("""
 //    UPDATE invitee

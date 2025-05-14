@@ -34,6 +34,9 @@ class InviteeRepository(private val inviteeDao: InviteeDao) {
         return inviteeDao.getInviteeByPhoneAndEvent(phone, eventId) != null
     }
 
+    suspend fun checkInviteeExistsIfInvited(phone: String, eventId: String): Boolean {
+        return inviteeDao.getInviteeByPhoneAndEventIfInvited(phone, eventId) != null
+    }
 
 
     suspend fun updateCheckIn(phone: String, eventId: String, checkInTime: String, checkInDate: String) {

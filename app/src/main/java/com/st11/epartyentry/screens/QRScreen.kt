@@ -127,7 +127,7 @@ fun QRScreen(navController: NavController) {
                     .clickable {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://st11-homy.github.io/MyDebts/privacy.html")
+                            Uri.parse("https://st11-homy.github.io/Eparty-Entry/privacy-policy.html")
                         )
                         context.startActivity(intent)
                     }

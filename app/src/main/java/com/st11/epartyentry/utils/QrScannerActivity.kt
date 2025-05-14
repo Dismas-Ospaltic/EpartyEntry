@@ -51,6 +51,7 @@ private lateinit var eventId: String
 
             CoroutineScope(Dispatchers.Main).launch {
 
+
                 val exists = inviteeViewModel.checkInvitee(result.contents, eventId)
                 if (exists) {
                     Toast.makeText(this@QrScannerActivity, "Invitee already Checked in", Toast.LENGTH_SHORT).show()
@@ -63,8 +64,13 @@ private lateinit var eventId: String
                 )
             }
 
+                val isInvited = inviteeViewModel.checkInviteeIfInvited(result.contents, eventId)
+                if (!isInvited) {
+                  Toast.makeText(this@QrScannerActivity, "This person is not invited to this Event", Toast.LENGTH_LONG).show()
+                }
+
             }
-            Toast.makeText(this, "Scanned: ${result.contents}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Scanned: ${result.contents}", Toast.LENGTH_SHORT).show()
 
         } else {
             Toast.makeText(this, "Cancelled", Toast.LENGTH_SHORT).show()

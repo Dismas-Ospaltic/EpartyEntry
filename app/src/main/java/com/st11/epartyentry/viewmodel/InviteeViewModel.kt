@@ -47,6 +47,10 @@ class InviteeViewModel(private val inviteeRepository: InviteeRepository) : ViewM
       return inviteeRepository.checkInviteeExists(phone, eventId)
    }
 
+   suspend fun checkInviteeIfInvited(phone: String, eventId: String): Boolean {
+      return inviteeRepository.checkInviteeExistsIfInvited(phone, eventId)
+   }
+
 //suspend fun checkInvitee(phone: String, eventId: String): Boolean {
 //   return inviteeRepository.checkInviteeExists(phone, eventId)
 //}

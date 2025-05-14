@@ -2,6 +2,8 @@ package com.st11.epartyentry.screens
 
 
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.compose.foundation.background
@@ -282,6 +284,26 @@ fun CreateIdentityScreen(navController: NavController) {
                     enabled = fullName.isNotBlank() && isValid && phoneNumber.isNotEmpty()
                 ) {
                     Text("Continue", color = Color.White)
+                }
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Privacy Policy",
+                        color = colorResource(id = R.color.main_color), // Or any color you prefer
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.clickable {   val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://st11-homy.github.io/Eparty-Entry/privacy-policy.html")
+                        )
+                            context.startActivity(intent) }
+                    )
                 }
             }
         }

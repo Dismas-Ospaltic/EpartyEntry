@@ -241,6 +241,7 @@ fun EventDetailScreen(navController: NavController, itemId: String?) {
 
     val interactionSource = remember { MutableInteractionSource() }
     var isHovered by remember { mutableStateOf(false) }
+    var isHoveredShare by remember { mutableStateOf(false) }
     var showDialog by remember { mutableStateOf(false) } // State to control popup visibility
     val context = LocalContext.current
 
@@ -465,13 +466,13 @@ fun EventDetailScreen(navController: NavController, itemId: String?) {
                                 modifier = Modifier
                                     .size(56.dp)
                                     .clip(CircleShape)
-                                    .background(if (isHovered) Color.LightGray.copy(alpha = 0.2f) else Color.Transparent)
+                                    .background(if (isHoveredShare) Color.LightGray.copy(alpha = 0.2f) else Color.Transparent)
                                     .pointerInput(Unit) {
                                         detectTapGestures(
                                             onPress = {
-                                                isHovered = true
+                                                isHoveredShare = true
                                                 tryAwaitRelease()
-                                                isHovered = false
+                                                isHoveredShare = false
                                             },
                                             onTap = {
                                                 when (label) {
@@ -662,7 +663,7 @@ fun EventDetailScreen(navController: NavController, itemId: String?) {
                                         Column(modifier = Modifier.weight(1f)) {
                                             Text(text = invitee[index].fullName)
                                             Text(text = invitee[index].phone)
-                                            Text(text = invitee[index].checkInTime)
+//                                            Text(text = invitee[index].checkInTime)
                                         }
                                     }
                                 }
