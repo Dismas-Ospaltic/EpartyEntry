@@ -99,7 +99,7 @@ fun QRScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Hello ${userData.userName} 😊",
+                text = "Hello ${userData.userName}",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.Gray,
@@ -107,8 +107,17 @@ fun QRScreen(navController: NavController) {
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
             )
-
-            Spacer(modifier = Modifier.height(16.dp))
+//            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "use this to enter the event you have been invite.",
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.teal_200),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.CenterHorizontally)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
             Image(
                 bitmap = qrBitmap.asImageBitmap(),

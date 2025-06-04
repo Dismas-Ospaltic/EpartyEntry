@@ -22,6 +22,15 @@ class InviteeRepository(private val inviteeDao: InviteeDao) {
         inviteeDao.updateInvitee(invitee)
     }
 
+    suspend fun updateInviteeById(fullName: String, phone: String, inviteId: String): Int? {
+        return inviteeDao.updateInviteeById(fullName, phone, inviteId)
+    }
+
+
+    suspend fun deleteInviteeById(inviteId: String): Int? {
+        return inviteeDao.deleteInviteeById(inviteId)
+    }
+
     suspend fun updateInviteeStatus(isCheckIn: Boolean, eventId: String): Int? {
         return inviteeDao.updateInviteeStatus(isCheckIn, eventId)
     }
@@ -43,6 +52,9 @@ class InviteeRepository(private val inviteeDao: InviteeDao) {
         inviteeDao.updateCheckIn(phone, eventId, checkInTime, checkInDate)
     }
 
+    suspend fun getInviteeByInviteId(inviteId: String): InviteeEntity? {
+        return inviteeDao.getInviteeByInviteId(inviteId)
+    }
 
 
 

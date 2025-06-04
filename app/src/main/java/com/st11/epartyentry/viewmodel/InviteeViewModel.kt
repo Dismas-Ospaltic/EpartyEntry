@@ -51,9 +51,33 @@ class InviteeViewModel(private val inviteeRepository: InviteeRepository) : ViewM
       return inviteeRepository.checkInviteeExistsIfInvited(phone, eventId)
    }
 
+   suspend fun updateInviteeById(fullName: String, phone: String, inviteId: String): Int? {
+      return inviteeRepository.updateInviteeById(fullName, phone, inviteId)
+   }
+
+
+   suspend fun deleteInviteeById(inviteId: String): Int? {
+      return inviteeRepository.deleteInviteeById(inviteId)
+   }
+
 //suspend fun checkInvitee(phone: String, eventId: String): Boolean {
 //   return inviteeRepository.checkInviteeExists(phone, eventId)
 //}
+
+//   suspend fun getInviteeByInviteId(inviteId: String): InviteeEntity? {
+//      return inviteeRepository.getInviteeByInviteId(inviteId)
+//   }
+
+   private val _inviteeState = MutableStateFlow<InviteeEntity?>(null)
+   val inviteeState: StateFlow<InviteeEntity?> = _inviteeState
+
+
+   fun getInviteeDetails(inviteId: String) {
+      viewModelScope.launch {
+         val person = inviteeRepository.getInviteeByInviteId(inviteId)
+         _inviteeState.value = person
+      }
+   }
 
 
 }

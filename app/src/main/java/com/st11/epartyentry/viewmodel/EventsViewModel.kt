@@ -82,4 +82,42 @@ class EventsViewModel(private val eventRepository: EventRepository) : ViewModel(
 
     }
 
+    fun updateEventDetails(
+        eventDate: String,
+        eventType: String,
+        description: String,
+        venue: String,
+        phone: String,
+        hostName: String,
+        eventId: String,
+    ) {
+        viewModelScope.launch {
+            val success = eventRepository.editEventDetail(eventDate, eventType, description, venue, phone, hostName, eventId)
+            if (success) {
+                _eventDetail.value = _eventDetail.value?.let { event  ->
+//                    if (person.uid == userId) {
+//                        person.copy(
+//                            firstName = firstName,
+//                            lastName = lastName,
+//                            email = email,
+//                            phone = phone,
+//                            businessName = businessName,
+//                            address = address
+//                        )
+//                    } else person
+                    if (event.eventId == eventId) {
+                    event.copy(
+                        eventDate = eventDate,
+                        eventType = eventType,
+                        description = description,
+                        venue = venue,
+                        phone = phone,
+                        hostName = hostName
+                    )
+                } else event
+            }
+            }
+        }
+    }
+
 }

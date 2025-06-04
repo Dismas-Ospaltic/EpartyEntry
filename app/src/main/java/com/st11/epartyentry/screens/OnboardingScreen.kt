@@ -132,7 +132,7 @@ val onboardingPages = listOf(
         description = "Create A party Event with friends and family"
     ),
     OnboardingPage(
-        imageRes = R.drawable.id,
+        imageRes = R.drawable.idcard,
         title = "Your Identity",
         description = "Add your phone number and name to create your Identity"
     ),

@@ -39,6 +39,10 @@ class EventRepository(private val eventDao: EventDao) {
             .map { total -> total ?: 0 }  // Convert NULL to 0.0
     }
 
+    suspend fun  editEventDetail(eventDate: String, eventType: String, description: String, venue: String, phone: String, hostName: String, eventId: String): Boolean{
+        val rowsUpdated = eventDao.editEventDetail(eventDate, eventType, description, venue, phone, hostName, eventId) ?: 0
+        return rowsUpdated > 0
+    }
 
 
 

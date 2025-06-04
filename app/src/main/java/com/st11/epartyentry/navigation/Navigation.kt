@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.st11.epartyentry.screens.CreateEventScreen
 import com.st11.epartyentry.screens.CreateIdentityScreen
+import com.st11.epartyentry.screens.EditEventScreen
 import com.st11.epartyentry.screens.HistoryScreen
 import com.st11.epartyentry.screens.OnboardingScreen
 import com.st11.epartyentry.screens.QRScreen
@@ -35,6 +36,9 @@ sealed class Screen(val route: String) {
     object Onboarding : Screen("onboarding")
     object CreateIdentity : Screen("createIdentity")
 
+    object EditEventDetail : Screen("editEventDetail/{itemId}") {
+        fun createRoute(itemId: String) = "editEventDetail/$itemId"
+    }
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -63,6 +67,10 @@ fun AppNavHost(navController: NavHostController, modifier: Modifier) {
         composable(Screen.EventDetail.route) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getString("itemId") ?: "Unknown"
             EventDetailScreen(navController, itemId)
+        }
+        composable(Screen.EditEventDetail.route) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getString("itemId") ?: "Unknown"
+            EditEventScreen(navController, itemId)
         }
 
         composable(Screen.Splash.route) {

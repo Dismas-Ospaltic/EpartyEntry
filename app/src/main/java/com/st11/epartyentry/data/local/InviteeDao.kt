@@ -22,6 +22,13 @@ interface InviteeDao {
     @Query("UPDATE invitee SET isCheckIn = :isCheckIn WHERE eventId = :eventId")
     suspend fun updateInviteeStatus(isCheckIn: Boolean, eventId: String): Int?
 
+    @Query("UPDATE invitee SET fullName = :fullName, phone = :phone WHERE inviteId = :inviteId")
+    suspend fun updateInviteeById(fullName: String, phone: String, inviteId: String): Int?
+
+    @Query("DELETE FROM invitee WHERE inviteId = :inviteId")
+    suspend fun deleteInviteeById(inviteId: String): Int?
+
+
     @Query("SELECT * FROM invitee WHERE eventId = :eventId ORDER BY timestamp DESC")
     fun getAllInvitee(eventId: String): Flow<List<InviteeEntity>>
 
@@ -42,6 +49,9 @@ interface InviteeDao {
     @Query("SELECT * FROM invitee WHERE phone = :phone AND eventId = :eventId LIMIT 1")
     suspend fun getInviteeByPhoneAndEventIfInvited(phone: String, eventId: String): InviteeEntity?
 
+
+    @Query("SELECT * FROM invitee WHERE inviteId = :inviteId LIMIT 1")
+   suspend fun getInviteeByInviteId(inviteId: String): InviteeEntity?
 //    @Query("""
 //    UPDATE invitee
 //    SET isCheckIn = 1, checkInTime = :checkInTime , checkInDate = :checkInDate
