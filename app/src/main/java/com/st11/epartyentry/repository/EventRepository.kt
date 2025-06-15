@@ -11,6 +11,10 @@ class EventRepository(private val eventDao: EventDao) {
 
 
     fun getAllEvents(): Flow<List<EventEntity>> = eventDao.getAllEvents()
+
+    fun getAllUpcomingEvents(formattedDate: String): Flow<List<EventEntity>> = eventDao.getAllUpcomingEvents(formattedDate)
+//
+
 //    fun getAllTotalUpcoming(formattedDate: String): Flow<Int?> = eventDao.getAllTotalUpcoming(formattedDate)
 //    fun getAllTotalEnded(formattedDate: String): Flow<Int?> = eventDao.getAllTotalEnded(formattedDate)
     suspend fun insertEvent(event: EventEntity) {

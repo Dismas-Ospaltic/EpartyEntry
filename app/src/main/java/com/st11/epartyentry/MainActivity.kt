@@ -2,19 +2,19 @@ package com.st11.epartyentry
 
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.WindowManager
-import android.view.Window
-import android.view.WindowInsets
-import android.view.WindowInsetsController
-import androidx.compose.ui.res.painterResource
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
@@ -77,7 +77,13 @@ class MainActivity : ComponentActivity() {
                 }
 
             ) { paddingValues ->
-                AppNavHost(navController, Modifier.padding(paddingValues))
+                AppNavHost(navController,
+                    Modifier
+                        .padding(paddingValues)
+                        // .consumeWindowInsets(paddingValues)
+                        .windowInsetsPadding(WindowInsets.systemBars)
+                )
+
             }
         }
     }
@@ -91,7 +97,7 @@ fun BottomNavigationBar(navController: NavHostController) {
     val screens = listOf(Screen.Home, Screen.History, Screen.QR)
 
     val backgroundColor = colorResource(id = R.color.bottom_bar_background)
-    val selectedColor = colorResource(id = R.color.tab_selected)
+    val selectedColor = colorResource(id = R.color.pink)
     val unselectedColor = colorResource(id = R.color.tab_unselected)
     val tabIndicatorColor = colorResource(id = R.color.tab_indicator)
 

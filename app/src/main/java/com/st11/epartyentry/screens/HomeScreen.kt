@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -44,6 +45,7 @@ import com.st11.epartyentry.R
 import com.st11.epartyentry.navigation.Screen
 import com.st11.epartyentry.utils.DynamicStatusBar
 import com.st11.epartyentry.utils.QrScannerActivity
+import com.st11.epartyentry.utils.formatDateToReadable
 import com.st11.epartyentry.viewmodel.CreateIdentityViewModel
 import com.st11.epartyentry.viewmodel.EventsViewModel
 import compose.icons.FontAwesomeIcons
@@ -101,113 +103,143 @@ val eventViewModel: EventsViewModel = koinViewModel()
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .verticalScroll(rememberScrollState())
                 .background(colorResource(id = R.color.light_bg_color))
+
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-
-
-
-            }
-
-            // Search Field
-            TextField(
-                value = searchQuery.value,
-                onValueChange = { searchQuery.value = it },
-                placeholder = { Text(text = "Search...") },
-                leadingIcon = {
-
-                    Icon(
-                        imageVector = FontAwesomeIcons.Solid.Search,
-                        contentDescription = "Search Icon",
-                        tint = Color.Gray,
-                        modifier = Modifier.size(24.dp)
-                    )
-                },
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(Color.White),
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    cursorColor = Color.Black,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent
-                ),
-                singleLine = true
-            )
+                    .fillMaxSize()
+//                .padding(paddingValues)
+//                .padding(bottom = 100.dp)
+                    .padding(
+                        start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+                        top = paddingValues.calculateTopPadding(),
+                        end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+                        bottom = paddingValues.calculateBottomPadding() + 90.dp
+                    )
+                    .verticalScroll(rememberScrollState())
+//                .background(colorResource(id = R.color.light_bg_color))
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            // ✅ Show "No Data Available" if the list is empty initially or after filtering
-            if (events.isEmpty()) {
-                // No data available at the initial display
                 Box(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "No Data Available",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Gray
-                    )
-                }
-            } else if (filteredEvents.isEmpty()) {
-                // No data available after search
 
 
-                // No data available after search
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "No Results Found",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Gray
-                    )
                 }
-            } else {
+
+                // Search Field
+                TextField(
+                    value = searchQuery.value,
+                    onValueChange = { searchQuery.value = it },
+                    placeholder = { Text(text = "Search...") },
+                    leadingIcon = {
+
+                        Icon(
+                            imageVector = FontAwesomeIcons.Solid.Search,
+                            contentDescription = "Search Icon",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Color.White),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        cursorColor = Color.Black,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    singleLine = true
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+
+                // ✅ Show "No Data Available" if the list is empty initially or after filtering
+                if (events.isEmpty()) {
+                    // No data available at the initial display
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No Data Available",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Gray
+                        )
+                    }
+                } else if (filteredEvents.isEmpty()) {
+                    // No data available after search
+
+
+                    // No data available after search
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No Results Found",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Gray
+                        )
+                    }
+                } else {
 
 //                repeat(10) { index ->
 //                items(filteredPeople) { index, person ->
-                for (index in filteredEvents.indices) {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable { navController.navigate(Screen.EventDetail.createRoute(events[index].eventId)) },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White)
-                    ) {
-                        Row(
+                    for (index in filteredEvents.indices) {
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                                .padding(8.dp)
+                                .clickable {
+                                    navController.navigate(
+                                        Screen.EventDetail.createRoute(
+                                            events[index].eventId
+                                        )
+                                    )
+                                },
+                            shape = RoundedCornerShape(12.dp),
+                            colors = CardDefaults.cardColors(containerColor = Color.White)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(text = "Event: ${events[index].eventType}")
-                                Text(text = "Date: ${events[index].eventDate}")
-                                Text(text = "Venue: ${events[index].venue}")
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Column(modifier = Modifier.weight(1f)) {
+                                    Text(
+                                        text = "On ${formatDateToReadable(events[index].eventDate)}",
+                                        fontWeight = FontWeight.Bold,
+                                        color = colorResource(id = R.color.teal_200)
+                                    )
+                                    Text(text = "Event:",
+                                        fontWeight = FontWeight.Bold,
+                                        color = colorResource(id = R.color.dark)
+                                    )
+                                    Text(
+                                        text = "${events[index].eventType} at ${events[index].venue}",
+                                        color = colorResource(id = R.color.dark)
+                                    )
+//
+                                }
                             }
                         }
                     }
                 }
-        }
 
+            }
         }
 
     }

@@ -21,6 +21,10 @@ interface EventDao {
     @Query("SELECT * FROM events ORDER BY timestamp DESC")
     fun getAllEvents(): Flow<List<EventEntity>>
 
+
+    @Query("SELECT * FROM events WHERE eventDate > :formattedDate ORDER BY timestamp DESC")
+    fun getAllUpcomingEvents(formattedDate: String): Flow<List<EventEntity>>
+
     @Query("UPDATE events SET eventDate = :eventDate, eventType = :eventType, description = :description, venue = :venue, phone = :phone, hostName = :hostName, eventId = :eventId WHERE eventId = :eventId")
     suspend fun editEventDetail(eventDate: String, eventType: String, description: String, venue: String, phone: String, hostName: String, eventId: String): Int?
 

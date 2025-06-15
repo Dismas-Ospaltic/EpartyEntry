@@ -36,8 +36,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.st11.epartyentry.R
+import com.st11.epartyentry.navigation.Screen
 import com.st11.epartyentry.utils.DynamicStatusBar
+import com.st11.epartyentry.utils.formatDate
+import com.st11.epartyentry.utils.formatDateToReadable
 import com.st11.epartyentry.viewmodel.EventsViewModel
+import compose.icons.FontAwesomeIcons
+import compose.icons.fontawesomeicons.Solid
+import compose.icons.fontawesomeicons.solid.Home
+import compose.icons.fontawesomeicons.solid.Plus
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -55,11 +62,15 @@ fun HistoryScreen(navController: NavController) {
 //    val totalPeople by peopleViewModel.totalPeople.collectAsState()
      val totalEnded by eventViewModel.totalEnded.collectAsState()
     val totalUpcoming by eventViewModel.totalUpcoming.collectAsState()
+    val upcomingEvents by eventViewModel.upcomingEvents.collectAsState()
+    val currentDate = System.currentTimeMillis()
+        val formattedDate = formatDate(currentDate) // Should return "DD-MM-YYYY"
 
 
     LaunchedEffect(Unit)  {
        eventViewModel.getAllTotalEnded()
         eventViewModel.getAllTotalUpcoming()
+        eventViewModel.getAllUpcomingEvents(formattedDate)
     }
 
     Scaffold(
@@ -122,6 +133,117 @@ fun HistoryScreen(navController: NavController) {
 //                    color = Color.Gray
 //                )
 //            }
+
+            Box(
+                modifier = Modifier
+//                    .fillMaxSize()
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp)
+                    .background(Color.White.copy(alpha = 0.85f), RoundedCornerShape(12.dp))
+//                                .background(Color(0xFFF5F5F5))
+            ) {
+
+                Column {
+                    Text(
+                        text = "Your upcoming events",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+
+
+                    if(upcomingEvents.isEmpty()){
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp), // Add padding around the entire Box
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "You Do not have Upcoming events",
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Gray,
+                                modifier = Modifier.padding(16.dp) // Padding specific to the Text
+                            )
+                        }
+
+                    }else {
+
+                        upcomingEvents.forEach { event ->
+
+//                    repeat(10) {
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(8.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color.White)
+                            ) {
+
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Column(modifier = Modifier.weight(1f)) {
+                                        Text(
+                                            text = "On ${formatDateToReadable(event.eventDate)}",
+                                            fontWeight = FontWeight.Bold,
+                                            color = colorResource(id = R.color.teal_200)
+                                        )
+                                        Text(
+                                            text = "${event.eventType} at ${event.venue}",
+                                            color = colorResource(id = R.color.dark)
+                                        )
+                                    }
+
+                                    Button(
+                                        onClick = {
+                                            navController.navigate(
+                                                Screen.EventDetail.createRoute(
+                                                    event.eventId
+                                                )
+                                            )
+                                        },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = colorResource(id = R.color.teal_200)
+                                        ),
+                                        modifier = Modifier
+                                            .padding(
+                                                horizontal = 6.dp,
+                                                vertical = 6.dp
+                                            ) // Adjust padding as needed
+                                    ) {
+                                        Icon(
+                                            imageVector = FontAwesomeIcons.Solid.Plus,
+                                            contentDescription = "Add",
+                                            tint = colorResource(id = R.color.white),
+                                            modifier = Modifier.size(24.dp)
+                                        )
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text("Add invites", color = Color.White)
+                                    }
+
+                                }
+
+                            }
+                        } }
+                }
+
+
+
+            }
+
+
+
+
+
         }
 
     }

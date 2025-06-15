@@ -22,6 +22,7 @@ class CreateIdentityViewModel(
     val userData: StateFlow<UserData> = identityPreferences.userData
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), UserData("", "", "", false))
 
+
     // Save user identity
     fun saveUserIdentity(phone: String, name: String, userId: String) {
         viewModelScope.launch {

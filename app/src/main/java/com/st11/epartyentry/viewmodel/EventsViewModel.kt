@@ -17,6 +17,10 @@ class EventsViewModel(private val eventRepository: EventRepository) : ViewModel(
     private val _events = MutableStateFlow<List<EventEntity>>(emptyList())
     val events: StateFlow<List<EventEntity>> = _events
 
+    // Holds the list of events
+    private val _upcomingEvents = MutableStateFlow<List<EventEntity>>(emptyList())
+    val upcomingEvents: StateFlow<List<EventEntity>> = _upcomingEvents
+
     // Holds a single event item
     private val _eventDetail = MutableStateFlow<EventEntity?>(null)
     val eventDetail: StateFlow<EventEntity?> = _eventDetail
@@ -32,6 +36,15 @@ class EventsViewModel(private val eventRepository: EventRepository) : ViewModel(
         viewModelScope.launch {
             eventRepository.getAllEvents().collectLatest { eventList ->
                 _events.value = eventList
+            }
+        }
+    }
+
+
+     fun getAllUpcomingEvents(formattedDate: String) {
+        viewModelScope.launch {
+            eventRepository.getAllUpcomingEvents(formattedDate).collectLatest { eventList ->
+                _upcomingEvents.value = eventList
             }
         }
     }
